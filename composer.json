@@ -1,0 +1,24 @@
+{
+    "name": "sectorr/core",
+    "description": "Core elements of Sectorr MVC",
+    "license": "MIT License",
+    "authors": [
+        {
+            "name": "Mirko Kroese",
+            "email": "mirko@sectorr.co"
+        },
+       	{
+       		"name": "Janyk Steenbeek",
+       		"email": "janyk@sectorr.co"
+       	}
+    ],
+    "autoload": {
+        "psr-4": {"Sectorr\\Core\\": ""},
+        "files": ["helpers.php"]
+    },
+    "require": {
+    	"php": ">5.6.4",
+        "catfan/medoo": "^1.0",
+        "filp/whoops": "^2.0"
+    }
+}
