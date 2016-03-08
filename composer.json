@@ -14,7 +14,7 @@
     ],
     "autoload": {
         "psr-4": {"Sectorr\\Core\\": "Sector/Core/"},
-        "files": ["helpers.php"]
+        "files": ["Sector/Core/helpers.php"]
     },
     "require": {
     	"php": ">5.6.4",
