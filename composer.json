@@ -13,7 +13,7 @@
        	}
     ],
     "autoload": {
-        "psr-4": {"Sectorr\\Core\\": "Sector/Core/"},
+        "psr-4": {"Sectorr\\Core\\": "Sectorr/Core/"},
         "files": ["Sectorr/Core/helpers.php"]
     },
     "require": {
