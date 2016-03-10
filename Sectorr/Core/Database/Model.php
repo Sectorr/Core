@@ -31,7 +31,13 @@ abstract class Model
      */
     protected function _find($id)
     {
-        return $this->setProperties($this->db->get($this->table, '*', ['id' => $id]));
+        $data = $this->db->get($this->table, '*', ['id' => $id]);
+
+        if(empty($data)) {
+            return false;
+        }
+
+        return $this->setProperties($data);
     }
 
     /**
@@ -44,6 +50,7 @@ abstract class Model
     protected function _where($field, $input)
     {
         $this->where['AND'][$field] = $input;
+
         return $this;
     }
 
@@ -55,7 +62,13 @@ abstract class Model
      */
     protected function _first($columns = '*')
     {
-        return $this->setProperties($this->db->get($this->table, $columns, $this->where));
+        $data = $this->db->get($this->table, $columns, $this->where);
+
+        if(empty($data)) {
+            return false;
+        }
+
+        return $this->setProperties($data);
     }
 
     /**
@@ -66,7 +79,13 @@ abstract class Model
      */
     protected function _get($columns = '*')
     {
-        return $this->getModelObjects($this->db->select($this->table, $columns, $this->where));
+        $data = $this->db->select($this->table, $columns, $this->where);
+
+        if(empty($data)) {
+            return false;
+        }
+
+        return $this->getModelObjects($data);
     }
 
     /**
@@ -77,7 +96,13 @@ abstract class Model
      */
     protected function _all($columns = '*')
     {
-        return $this->getModelObjects($this->db->select($this->table, $columns));
+        $data = $this->db->select($this->table, $columns);
+
+        if(empty($data)) {
+            return false;
+        }
+
+        return $this->getModelObjects($data);
     }
 
     /**
@@ -154,7 +179,7 @@ abstract class Model
      * @param $data
      * @return $this
      */
-    private function setProperties($data)
+    private function setProperties(array $data)
     {
         foreach($data as $key => $value) {
             $this->setProperty($key, $value);
