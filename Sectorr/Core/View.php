@@ -6,7 +6,7 @@ use Sectorr\Core\Exceptions\ViewNotFoundException;
 
 class View
 {
-    
+
     public static function make($view, $data = [])
     {
         $location = PATH . '/app/Views/' . $view . '.php';
@@ -18,20 +18,15 @@ class View
         ob_start();
 
         foreach ($data as $key => $value) {
-            if (! is_array($value)) {
-                $varname = $key;
-                $$varname = $value;
-            } else {
-                $varname = $key;
-                $$varname = $value[0];
-            }
+            $varname = $key;
+            $$varname = $value;
         }
 
         require_once($location);
 
         $string = ob_get_contents();
         ob_end_clean();
-        
+
         return $string;
     }
 }
