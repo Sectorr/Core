@@ -3,6 +3,8 @@
 namespace Sectorr\Core\Auth;
 
 use Sectorr\Core\Config;
+use Sectorr\Core\Http\Session;
+use Sectorr\Core\Input\Hash;
 use Sectorr\Core\Input\Input;
 
 class Auth {
@@ -14,8 +16,11 @@ class Auth {
      */
     public static function user()
     {
-        if (isset($_SESSION['user'])) {
-            return (object) $_SESSION['user'];
+        if(Session::has('user')) {
+            $userModel = Config::get('user');
+            $model = new $userModel();
+
+            return $model->find(Session::get('user'));
         }
         return false;
     }
@@ -48,8 +53,8 @@ class Auth {
         if(!empty($input)) {
             $user = $model->where($primary, $input[$primary])->first();
 
-            if(! empty($user) && $user['password'] == Input::get('password')) {
-                $_SESSION['user'] = $user;
+            if(! empty($user) && Hash::check($input['password'], $user->password)) {
+                Session::set('user', $user->id);
                 return true;
             }
 
