@@ -5,18 +5,22 @@ namespace Sectorr\Core\Database;
 use Sectorr\Core\Config;
 use Sectorr\Core\Contracts\CrudContract;
 
-abstract class Model implements CrudContract
+abstract class Model
 {
 
     protected $db;
     protected $where = ["AND" => []];
+    private $fields = [];
 
     /**
      * Model constructor.
+     *
+     * @param array $fields
      */
-    public function __construct()
+    public function __construct(array $fields = [])
     {
         $this->db = new Database();
+        $this->setProperties($fields);
     }
 
     /**
@@ -25,9 +29,9 @@ abstract class Model implements CrudContract
      * @param $id
      * @return mixed
      */
-    public function _find($id)
+    protected function _find($id)
     {
-        return $this->db->get($this->table, '*', ['id' => $id]);
+        return $this->setProperties($this->db->get($this->table, '*', ['id' => $id]));
     }
 
     /**
@@ -37,7 +41,7 @@ abstract class Model implements CrudContract
      * @param $input
      * @return $this
      */
-    public function _where($field, $input)
+    protected function _where($field, $input)
     {
         $this->where['AND'][$field] = $input;
         return $this;
@@ -49,9 +53,9 @@ abstract class Model implements CrudContract
      * @param string $columns
      * @return bool
      */
-    public function _first($columns = '*')
+    protected function _first($columns = '*')
     {
-        return $this->db->get($this->table, $columns, $this->where);
+        return $this->setProperties($this->db->get($this->table, $columns, $this->where));
     }
 
     /**
@@ -60,9 +64,9 @@ abstract class Model implements CrudContract
      * @param string $columns
      * @return array|bool
      */
-    public function _get($columns = '*')
+    protected function _get($columns = '*')
     {
-        return $this->db->select($this->table, $columns, $this->where);
+        return $this->getModelObjects($this->db->select($this->table, $columns, $this->where));
     }
 
     /**
@@ -71,9 +75,9 @@ abstract class Model implements CrudContract
      * @param string $columns
      * @return array|bool
      */
-    public function _all($columns = '*')
+    protected function _all($columns = '*')
     {
-        return $this->db->select($this->table, $columns);
+        return $this->getModelObjects($this->db->select($this->table, $columns));
     }
 
     /**
@@ -82,7 +86,7 @@ abstract class Model implements CrudContract
      * @param array $data
      * @return array
      */
-    public function _create(array $data)
+    protected function _create(array $data)
     {
         return $this->db->insert($this->table, $data);
     }
@@ -94,7 +98,7 @@ abstract class Model implements CrudContract
      * @param array $data
      * @return bool|int
      */
-    public function _update($id, array $data)
+    protected function _update($id, array $data)
     {
         return $this->db->update($this->table, $data, ['id' => $id]);
     }
@@ -105,9 +109,58 @@ abstract class Model implements CrudContract
      * @param $id
      * @return bool|int
      */
-    public function _delete($id)
+    protected function _delete($id)
     {
         return $this->db->delete($this->table, ['id' => $id]);
+    }
+
+    public function getModelObjects(array $results)
+    {
+        foreach($results as $key => $result) {
+            $results[$key] = new $this($result);
+        }
+
+        return $results;
+    }
+
+    /**
+     * Get dynamic property.
+     *
+     * @param $key
+     * @return null
+     */
+    private function getProperty($key)
+    {
+        return array_key_exists($key, $this->fields) ? $this->fields[$key] : null;
+    }
+
+    /**
+     * Set dynamic property.
+     *
+     * @param $key
+     * @param $value
+     * @return $this
+     */
+    private function setProperty($key, $value)
+    {
+        $this->fields[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Go through array and set all dynamic properties.
+     *
+     * @param $data
+     * @return $this
+     */
+    private function setProperties($data)
+    {
+        foreach($data as $key => $value) {
+            $this->setProperty($key, $value);
+        }
+
+        return $this;
     }
 
     /**
@@ -132,5 +185,27 @@ abstract class Model implements CrudContract
     public static function __callStatic($name, $arguments)
     {
         return call_user_func_array([(new static()), '_' . $name], $arguments);
+    }
+
+    /**
+     * Get dynamic property from object.
+     *
+     * @param $key
+     * @return null
+     */
+    public function __get($key)
+    {
+        return $this->getProperty($key);
+    }
+
+    /**
+     * Set dynamic property from object.
+     *
+     * @param $key
+     * @param $value
+     */
+    public function __set($key, $value)
+    {
+        $this->setProperty($key, $value);
     }
 }
