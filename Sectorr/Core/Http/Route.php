@@ -56,7 +56,7 @@ class Route
     public static function findRoute($route, $properties = [])
     {
         // Check if properties for dynamic routing are given.
-        if (empty($properties)) {
+        if (! empty($properties)) {
 
             // Loop through all the created routes
             foreach (self::$routes as $r) {
