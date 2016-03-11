@@ -139,6 +139,24 @@ abstract class Model
         return $this->db->delete($this->table, ['id' => $id]);
     }
 
+    /**
+     *
+     *
+     * @return $this
+     */
+    public function save()
+    {
+        if (isset($this->fields['id'])) {
+            return $this->_update($this->fields['id'], $this->fields);
+
+            return $this;
+        }
+
+        $this->_create($this->fields);
+
+        return $this;
+    }
+
     public function getModelObjects(array $results)
     {
         foreach($results as $key => $result) {
