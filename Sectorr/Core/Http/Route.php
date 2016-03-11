@@ -91,6 +91,7 @@ class Route
                 return $r['url'];
             }
         }
+        throw new RouteNotFoundException($route);
     }
 
     /**
