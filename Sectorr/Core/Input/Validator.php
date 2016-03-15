@@ -10,6 +10,8 @@ class Validator
     protected $db;
     protected $errors = [];
     protected $failed = false;
+    const RULE_SEPERATOR = "|";
+    const ARGUMENT_SEPERATOR = ":";
 
     public function __construct()
     {
@@ -23,10 +25,10 @@ class Validator
      * @param $rules
      * @return bool
      */
-    public function validate($input, $rules)
+    public function passes($input, $rules)
     {
-        foreach ($rules as $field => $arguments) {
-            $this->callValidator($input[$field], $field, $arguments);
+        foreach ($rules as $field => $rule) {
+            $this->callValidator($input[$field], $field, $rule);
         }
         return ! $this->failed;
     }
@@ -41,7 +43,8 @@ class Validator
     {
         if (empty($input)) {
             $this->failed = true;
-            $this->errors[] = "{$field} is a required field";
+            var_dump("error: {$field} is a required field");
+            //$this->errors[] = "{$field} is a required field";
         }
     }
 
@@ -53,6 +56,7 @@ class Validator
     protected function email($input)
     {
         if (!filter_var($input, FILTER_VALIDATE_EMAIL)) {
+            var_dump("error: {$input} not a valid email");
             $this->failed = true;
         }
     }
@@ -65,6 +69,7 @@ class Validator
     protected function password($input)
     {
         if (!(strlen($input) >= 4)) {
+            var_dump("error: {$input} not a valid password");
             $this->failed = true;
         }
     }
@@ -82,6 +87,7 @@ class Validator
             $column => $input
         ]);
         if ($email) {
+            var_dump("error: {$column} not unique");
             $this->failed = true;
         }
     }
@@ -92,18 +98,18 @@ class Validator
      * @param $arg
      * @return array|bool
      */
-    protected function multiple($arg)
+    protected function multiple($value)
     {
-        if (count(explode('|', $arg)) > 1) {
-            $args = explode('|', $arg);
-            if (count(explode(':', $args[1]))) {
-                $a       = $args[0];
-                $specs = explode(':', $args[1]);
-                return [true, $a, $specs];
-            }
-        } else {
-            return false;
+        $arguments = explode(':', $value);
+
+        if(count($arguments) > 1) {
+            $rule = $arguments[0];
+            unset($arguments[0]);
+
+            return ['multiple' => true, 'rule' => $rule, 'arguments' => array_values($arguments)];
         }
+
+        return ['multiple' => false];
     }
 
     /**
@@ -115,13 +121,14 @@ class Validator
      */
     protected function callValidator($input, $field, $arguments)
     {
+        $arguments = explode('|', $arguments);
+
         foreach ($arguments as $arg) {
-            if ($this->multiple($arg)) {
-                $argument = $this->multiple($arg)[1];
-                switch ($argument) {
+            if ($this->multiple($arg)['multiple']) {
+                switch ($this->multiple($arg)['rule']) {
                     case 'unique':
-                        $table = $this->multiple($arg)[2][0];
-                        $column = $this->multiple($arg)[2][1];
+                        $table = $this->multiple($arg)['arguments'][0];
+                        $column = $this->multiple($arg)['arguments'][1];
                         $this->unique($input, $table, $column);
                         break;
                 }
