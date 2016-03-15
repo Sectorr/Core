@@ -19,6 +19,7 @@
     "require": {
     	"php": ">5.6.4",
         "catfan/medoo": "^1.0",
-        "filp/whoops": "^2.0"
+        "filp/whoops": "^2.0",
+        "duncan3dc/blade": "^3.0"
     }
 }
