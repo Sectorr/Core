@@ -6,6 +6,7 @@
  * This file contains all Sectorr helpers.
  */
 
+use Sectorr\Core\Auth\Auth;
 use Sectorr\Core\Config;
 use Sectorr\Core\Http\Redirect;
 use Sectorr\Core\Http\Route;
@@ -25,7 +26,19 @@ if (! function_exists('view')) {
     }
 }
 
-
+if (! function_exists('user')) {
+    /**
+     * Helper: Returns logged in user.
+     *
+     * @param $view
+     * @return string
+     * @throws \Sectorr\Core\Exceptions\ViewNotFoundException
+     */
+    function user()
+    {
+        return Auth::user();
+    }
+}
 
 if (! function_exists('dd')) {
 
