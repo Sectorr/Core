@@ -8,7 +8,7 @@ class Hash
 
     /**
      * Returns given input hashed.
-     * 
+     *
      * @param $input
      * @return bool|string
      */
@@ -19,7 +19,7 @@ class Hash
 
     /**
      * Checks if input matches the hashed value
-     * 
+     *
      * @param $input
      * @param $password
      * @return bool

@@ -33,7 +33,7 @@ abstract class Model
     {
         $data = $this->db->get($this->table, '*', ['id' => $id]);
 
-        if(empty($data)) {
+        if (empty($data)) {
             return false;
         }
 
@@ -64,7 +64,7 @@ abstract class Model
     {
         $data = $this->db->get($this->table, $columns, $this->where);
 
-        if(empty($data)) {
+        if (empty($data)) {
             return false;
         }
 
@@ -81,7 +81,7 @@ abstract class Model
     {
         $data = $this->db->select($this->table, $columns, $this->where);
 
-        if(empty($data)) {
+        if (empty($data)) {
             return false;
         }
 
@@ -98,7 +98,7 @@ abstract class Model
     {
         $data = $this->db->select($this->table, $columns);
 
-        if(empty($data)) {
+        if (empty($data)) {
             return false;
         }
 
@@ -159,7 +159,7 @@ abstract class Model
 
     public function getModelObjects(array $results)
     {
-        foreach($results as $key => $result) {
+        foreach ($results as $key => $result) {
             $results[$key] = new $this($result);
         }
 
@@ -199,7 +199,7 @@ abstract class Model
      */
     private function setProperties(array $data)
     {
-        foreach($data as $key => $value) {
+        foreach ($data as $key => $value) {
             $this->setProperty($key, $value);
         }
 

@@ -7,7 +7,8 @@ use Sectorr\Core\Http\Session;
 use Sectorr\Core\Input\Hash;
 use Sectorr\Core\Input\Input;
 
-class Auth {
+class Auth
+{
 
     /**
      * Returns the logged in user's data as an object.
@@ -16,7 +17,7 @@ class Auth {
      */
     public static function user()
     {
-        if(Session::has('user')) {
+        if (Session::has('user')) {
             $userModel = Config::get('user');
             $model = new $userModel();
 
@@ -39,21 +40,21 @@ class Auth {
 
         $count = 0;
 
-        foreach($input as $field => $value) {
-            if($field == '_') {
+        foreach ($input as $field => $value) {
+            if ($field == '_') {
                 unset($input[$field]);
             } else {
                 $count++;
             }
-            if($count == 1) {
+            if ($count == 1) {
                 $primary = $field;
             }
         }
 
-        if(!empty($input)) {
+        if (!empty($input)) {
             $user = $model->where($primary, $input[$primary])->first();
 
-            if(! empty($user) && Hash::check($input['password'], $user->password)) {
+            if (! empty($user) && Hash::check($input['password'], $user->password)) {
                 Session::set('user', $user->id);
                 return true;
             }
@@ -69,7 +70,7 @@ class Auth {
      */
     public static function check()
     {
-        if(isset($_SESSION['user'])) {
+        if (isset($_SESSION['user'])) {
             return true;
         }
         return false;
@@ -82,7 +83,7 @@ class Auth {
      */
     public static function logout()
     {
-        if(self::check()) {
+        if (self::check()) {
             session_unset($_SESSION['user']);
             return true;
         }
