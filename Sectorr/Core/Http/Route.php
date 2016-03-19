@@ -120,21 +120,21 @@ class Route
         $uses = $props['uses'];
 
         // Check if any middleware has been set.
-        if(! empty($props['middleware'])) {
-            if(! ctype_upper(substr($props['middleware'], 0, 1))) {
+        if (! empty($props['middleware'])) {
+            if (! ctype_upper(substr($props['middleware'], 0, 1))) {
                 $middleware = substr_replace($props['middleware'], strtoupper(substr($props['middleware'], 0, 1)), 0);
-                $middleware .= substr($props['middleware'],1,strlen($props['middleware']));
+                $middleware .= substr($props['middleware'], 1, strlen($props['middleware']));
             } else {
                 $middleware = $props['middleware'];
             }
 
-            if(! file_exists(PATH . '/app/Middleware/' . $middleware . '.php')) {
+            if (! file_exists(PATH . '/app/Middleware/' . $middleware . '.php')) {
                 throw new MiddlewareNotFoundException($middleware);
             }
             $class = self::$middlewareNamespace . $middleware;
             $allowal = $class::allow();
 
-            if($allowal !== true) {
+            if ($allowal !== true) {
                 return $allowal;
             }
         }

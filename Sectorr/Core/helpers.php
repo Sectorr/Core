@@ -54,14 +54,15 @@ if (! function_exists('dd')) {
     }
 }
 
-if(! function_exists('isHttps')) {
+if (! function_exists('isHttps')) {
     
     /**
      * Helper: Returns if a secure connection has been used.
      *
      * @return bool
      */
-    function isHttps() {
+    function isHttps()
+    {
         return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off');
     }
 }
@@ -77,7 +78,7 @@ if (! function_exists('asset')) {
     function asset($userPath)
     {
         $path = (isHttps() ? 'https' : 'http') . '://'.$_SERVER['HTTP_HOST'];
-        if(substr($userPath, 1, 1) == '/') {
+        if (substr($userPath, 1, 1) == '/') {
             return $path . $userPath;
         }
         return $path . '/' . $userPath;

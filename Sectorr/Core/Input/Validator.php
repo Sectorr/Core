@@ -102,7 +102,7 @@ class Validator
     {
         $arguments = explode(':', $value);
 
-        if(count($arguments) > 1) {
+        if (count($arguments) > 1) {
             $rule = $arguments[0];
             unset($arguments[0]);
 

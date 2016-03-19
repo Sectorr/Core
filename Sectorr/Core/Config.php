@@ -17,7 +17,7 @@ class Config
     {
         $config = json_decode(file_get_contents(PATH . '/app/config.json'), true);
 
-        if(! array_key_exists($key, $config)) {
+        if (! array_key_exists($key, $config)) {
             throw new ConfigItemNotSetException($key);
         }
 
