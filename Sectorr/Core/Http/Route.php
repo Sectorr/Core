@@ -81,14 +81,14 @@ class Route
                         }
                         $count++;
                     }
-                    return $url;
+                    return ($url == '/' ? $url : "/{$url}");
                 }
             }
         }
 
         foreach (self::$routes as $r) {
             if ($r['props']['as'] == $route) {
-                return $r['url'];
+                return ($r['url'] == '/' ? $r['url'] : "/{$r['url']}");
             }
         }
         throw new RouteNotFoundException($route);
