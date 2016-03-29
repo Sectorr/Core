@@ -4,5 +4,10 @@ namespace Sectorr\Core\Contracts;
 
 interface MiddlewareContract
 {
-    public static function allow();
+    /**
+     * @param $route
+     * @param $properties
+     * @return mixed
+     */
+    public static function allow($route, array $properties);
 }

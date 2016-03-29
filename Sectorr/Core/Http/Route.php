@@ -113,6 +113,7 @@ class Route
      * @param array $properties
      * @return
      * @throws ControllerNotFoundException
+     * @throws MiddlewareNotFoundException
      */
     private static function callController($route, $properties = [])
     {
@@ -132,7 +133,7 @@ class Route
                 throw new MiddlewareNotFoundException($middleware);
             }
             $class = self::$middlewareNamespace . $middleware;
-            $allowal = $class::allow();
+            $allowal = $class::allow($route, $properties);
 
             if ($allowal !== true) {
                 return $allowal;
