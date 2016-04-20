@@ -152,7 +152,7 @@ abstract class Model
             return $this;
         }
 
-        $this->_create($this->fields);
+        $this->id = $this->_create($this->fields);
 
         return $this;
     }
